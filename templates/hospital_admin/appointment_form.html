@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card p-4 shadow-sm animate-slide-up">
+      <h2 class="mb-4">{{ title }}</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label"><strong>Patient</strong></label>
+          {{ form.patient }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><strong>Doctor</strong></label>
+          {{ form.doctor }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><strong>Appointment Date & Time</strong></label>
+          {{ form.scheduled_at }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><strong>Reason for Visit</strong></label>
+          {{ form.reason }}
+        </div>
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="mt-4">
+          <button class="btn btn-lg btn-success">Schedule Appointment</button>
+          <a href="{% url 'hospital_admin:appointments' %}" class="btn btn-lg btn-secondary ms-2">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

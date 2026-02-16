@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Medical Records</h2>
+  <a class="btn btn-primary" href="{% url 'hospital_admin:record_add' %}">Add Record</a>
+</div>
+
+<ul class="list-group">
+  {% for r in records %}
+    <li class="list-group-item">
+      <div class="small text-muted">{{ r.created_at }}</div>
+      <div><strong>{{ r.patient }}</strong></div>
+      <div>{{ r.notes|linebreaks }}</div>
+    </li>
+  {% empty %}
+    <li class="list-group-item text-muted">No records</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

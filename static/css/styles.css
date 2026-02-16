@@ -1,0 +1,664 @@
+/* ============================================
+   SMART HOSPITAL - PROFESSIONAL MEDICAL THEME
+   ============================================ */
+
+:root {
+    /* Primary Medical Colors */
+    --hospital-primary: #0066cc;
+    --hospital-secondary: #00c853;
+    --hospital-danger: #e74c3c;
+    --hospital-warning: #ff9800;
+    --hospital-light: #f5f7fa;
+    --hospital-dark: #1a1a1a;
+    
+    /* Medical Accent Colors */
+    --hospital-success: #27ae60;
+    --hospital-info: #2196f3;
+    --hospital-pending: #f39c12;
+    --hospital-completed: #27ae60;
+    
+    /* Neutral Colors */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--gray-50) 0%, #e8f1ff 100%);
+    color: var(--gray-700);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================
+   HOSPITAL NAVBAR
+   ============================================ */
+
+.hospital-navbar {
+    background: linear-gradient(135deg, var(--hospital-primary) 0%, #0052a3 100%);
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.15);
+    border-bottom: 3px solid var(--hospital-secondary);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand i {
+    margin-right: 0.5rem;
+    color: var(--hospital-secondary);
+}
+
+.Hospital-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.hospital-navbar .nav-link:hover {
+    color: white !important;
+}
+
+.hospital-navbar .dropdown-menu {
+    background: var(--gray-800);
+    border: 1px solid var(--hospital-primary);
+    border-radius: 8px;
+}
+
+.hospital-navbar .dropdown-item:hover {
+    background: var(--hospital-primary);
+    color: white;
+}
+
+/* ============================================
+   SIDEBAR NAVIGATION
+   ============================================ */
+
+.sidebar {
+    background: white;
+    border-right: 2px solid var(--gray-200);
+    padding: 2rem 1rem;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    color: var(--gray-600);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.sidebar .nav-link i {
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+    color: var(--hospital-primary);
+}
+
+.sidebar .nav-link:hover {
+    background: var(--gray-100);
+    color: var(--hospital-primary);
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background: linear-gradient(135deg, var(--hospital-primary) 0%, #0052a3 100%);
+    color: white;
+}
+
+.sidebar .nav-link.active i {
+    color: var(--hospital-secondary);
+}
+
+.sidebar .dropdown-menu {
+    background: transparent !important;
+    border: none;
+    padding-left: 1.5rem;
+}
+
+.sidebar .dropdown-item {
+    color: var(--gray-600);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.sidebar .dropdown-item:hover {
+    background: var(--gray-200);
+    color: var(--hospital-primary);
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+
+.main-content {
+    padding: 2rem;
+    flex: 1;
+}
+
+.container-fluid {
+    flex: 1;
+}
+
+/* ============================================
+   CARDS & COMPONENTS
+   ============================================ */
+
+.card {
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--gray-100) 0%, #f0f4f8 100%);
+    border-bottom: 2px solid var(--gray-200);
+    padding: 1.25rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Feature Cards */
+.feature-card {
+    background: white;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.feature-card:hover {
+    border-color: var(--hospital-primary);
+    box-shadow: 0 12px 32px rgba(0, 102, 204, 0.15);
+    transform: translateY(-8px);
+}
+
+.feature-card i {
+    font-size: 3rem;
+    color: var(--hospital-primary);
+    margin-bottom: 1rem;
+}
+
+.feature-card h5 {
+    color: var(--gray-800);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    color: var(--gray-600);
+    font-size: 0.95rem;
+}
+
+/* Stat Cards */
+.stat-card {
+    background: white;
+    border-left: 5px solid var(--hospital-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.stat-card h6 {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--hospital-primary);
+    margin: 0.5rem 0;
+}
+
+.stat-card.success {
+    border-left-color: var(--hospital-success);
+}
+
+.stat-card.success .stat-number {
+    color: var(--hospital-success);
+}
+
+.stat-card.warning {
+    border-left-color: var(--hospital-warning);
+}
+
+.stat-card.warning .stat-number {
+    color: var(--hospital-warning);
+}
+
+.stat-card.danger {
+    border-left-color: var(--hospital-danger);
+}
+
+.stat-card.danger .stat-number {
+    color: var(--hospital-danger);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--hospital-primary) 0%, #0052a3 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 8px 16px rgba(0, 102, 204, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: var(--hospital-success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #229954;
+    box-shadow: 0 8px 16px rgba(39, 174, 96, 0.3);
+}
+
+.btn-danger {
+    background: var(--hospital-danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+    box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+}
+
+.btn-outline-primary {
+    color: var(--hospital-primary);
+    border: 2px solid var(--hospital-primary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--hospital-primary);
+    color: white;
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+
+.badge {
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.badge.bg-success {
+    background: var(--hospital-completed) !important;
+}
+
+.badge.bg-warning {
+    background: var(--hospital-pending) !important;
+}
+
+.badge.bg-danger {
+    background: var(--hospital-danger) !important;
+}
+
+.badge.bg-info {
+    background: var(--hospital-info) !important;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+
+.form-control,
+.form-select {
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--hospital-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.15);
+}
+
+.form-label {
+    color: var(--gray-700);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.input-group-text {
+    background: var(--gray-100);
+    border: 2px solid var(--gray-200);
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+.table {
+    border-collapse: collapse;
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--gray-100) 0%, #f0f4f8 100%);
+    border: 2px solid var(--gray-200);
+    color: var(--gray-700);
+    font-weight: 700;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody td {
+    border: 1px solid var(--gray-200);
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: var(--gray-50);
+    box-shadow: inset 0 0 0 1px var(--gray-200);
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+
+.alert {
+    border-radius: 10px;
+    border: none;
+    padding: 1.25rem;
+}
+
+.alert-success {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--hospital-success);
+    border-left: 5px solid var(--hospital-success);
+}
+
+.alert-danger {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--hospital-danger);
+    border-left: 5px solid var(--hospital-danger);
+}
+
+.alert-warning {
+    background: rgba(255, 152, 0, 0.1);
+    color: var(--hospital-warning);
+    border-left: 5px solid var(--hospital-warning);
+}
+
+.alert-info {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--hospital-info);
+    border-left: 5px solid var(--hospital-info);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.hospital-footer {
+    background: linear-gradient(135deg, var(--gray-800) 0%, #1a1a1a 100%);
+    color: white;
+    margin-top: auto;
+    border-top: 2px solid var(--hospital-primary);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slideUp {
+    animation: slideUp 0.5s ease-out;
+}
+
+.animate-slideInLeft {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 80px;
+        width: 280px;
+        height: calc(100vh - 80px);
+        z-index: 999;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+
+    .feature-card i {
+        font-size: 2.5rem;
+    }
+
+    .stat-card .stat-number {
+        font-size: 2rem;
+    }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-primary {
+    color: var(--hospital-primary) !important;
+}
+
+.text-success {
+    color: var(--hospital-success) !important;
+}
+
+.text-danger {
+    color: var(--hospital-danger) !important;
+}
+
+.text-warning {
+    color: var(--hospital-warning) !important;
+}
+
+.bg-hospital-light {
+    background: var(--hospital-light) !important;
+}
+
+.shadow-hospital {
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.15) !important;
+}
+
+.rounded-medical {
+    border-radius: 12px !important;
+}
+
+.medical-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Remove default focus outline in favor of custom */
+:focus {
+    outline: none;
+}
+
+button:focus,
+a:focus {
+    outline: 2px solid var(--hospital-primary);
+    outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--hospital-primary);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0052a3;
+}
+

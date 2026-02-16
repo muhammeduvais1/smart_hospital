@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card p-4 shadow-sm animate-slide-up">
+      <h3 class="mb-4">{{ title }} — {{ doctor.first_name }} {{ doctor.last_name }}</h3>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label"><strong>Day of Week</strong></label>
+          <select name="weekday" class="form-select" required>
+            <option value="">-- Select a day --</option>
+            {% for value, label in form.fields.weekday.choices %}
+              {% if value %}
+                <option value="{{ value }}" {% if form.weekday.value == value %}selected{% endif %}>{{ label }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+          {% if form.weekday.errors %}
+            <div class="invalid-feedback d-block">{{ form.weekday.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label"><strong>Start Time</strong></label>
+              <input type="time" name="start_time" class="form-control" required>
+              {% if form.start_time.errors %}
+                <div class="invalid-feedback d-block">{{ form.start_time.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label"><strong>End Time</strong></label>
+              <input type="time" name="end_time" class="form-control" required>
+              {% if form.end_time.errors %}
+                <div class="invalid-feedback d-block">{{ form.end_time.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-lg btn-success">Save Time Slot</button>
+          <a href="{% url 'doctor:availability_list' doctor.pk %}" class="btn btn-lg btn-secondary ms-2">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

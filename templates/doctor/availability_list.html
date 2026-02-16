@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load hospital_tags %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="card p-4 shadow-sm">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>{{ doctor.first_name }} {{ doctor.last_name }} — Schedule</h3>
+        <a href="{% url 'doctor:detail' doctor.pk %}" class="btn btn-outline-secondary">Back</a>
+      </div>
+
+      <div class="mb-4">
+        <a href="{% url 'doctor:availability_create' doctor.pk %}" class="btn btn-success">+ Add Time Slot</a>
+      </div>
+
+      <h5>Weekly Schedule</h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for avail in availabilities %}
+              <tr class="animate-slide-up">
+                <td><strong>{{ avail.get_weekday_display }}</strong></td>
+                <td>{{ avail.start_time }}</td>
+                <td>{{ avail.end_time }}</td>
+                <td>
+                  <a href="{% url 'doctor:availability_delete' doctor.pk avail.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="text-muted text-center py-4">No availability slots. <a href="{% url 'doctor:availability_create' doctor.pk %}">Add one</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 shadow-sm bg-light">
+      <h6>Tips</h6>
+      <ul class="small mb-0">
+        <li>Add time slots for each day you are available.</li>
+        <li>Times are checked when scheduling appointments.</li>
+        <li>Appointment times must fall within one of your slots.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

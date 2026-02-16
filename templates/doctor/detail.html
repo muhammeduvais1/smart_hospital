@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load hospital_tags %}
+
+{% block content %}
+<div class="card p-4 shadow-sm">
+  <div class="d-flex justify-content-between">
+    <h3>{{ doctor.first_name }} {{ doctor.last_name }}</h3>
+    <div>
+      <a class="btn btn-sm btn-outline-secondary me-2" href="{% url 'doctor:update' doctor.pk %}">Edit</a>
+      {% if user.is_staff or user|has_group:'Admin' %}
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'doctor:availability_list' doctor.pk %}">Manage Availability</a>
+      {% endif %}
+    </div>
+  </div>
+  <p class="text-muted">Specialty: {{ doctor.specialty }}</p>
+
+  <h5>Availability</h5>
+  <ul class="list-group mb-3">
+    {% for a in availabilities %}
+      <li class="list-group-item">{{ a.get_weekday_display }}: {{ a.start_time }} - {{ a.end_time }}</li>
+    {% empty %}
+      <li class="list-group-item text-muted">No availability set. <a href="{% url 'doctor:availability_list' doctor.pk %}">Add one</a></li>
+    {% endfor %}
+  </ul>
+
+  <h5>Upcoming Appointments</h5>
+  <ul class="list-group">
+    {% for ap in upcoming %}
+      <li class="list-group-item">{{ ap.scheduled_at }} — {{ ap.patient }}</li>
+    {% empty %}
+      <li class="list-group-item text-muted">No upcoming appointments.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+

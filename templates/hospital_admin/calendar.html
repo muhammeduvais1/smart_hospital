@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Appointments Calendar</h3>
+<div id='calendar'></div>
+
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 650,
+      events: '{% url "hospital_admin:appointments_json" %}'
+    });
+    calendar.render();
+  });
+</script>
+
+<style>
+  #calendar { max-width: 900px; margin: 20px auto; }
+</style>
+
+{% endblock %}

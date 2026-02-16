@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-5">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="hospital-heading mb-0">📅 Appointments</h1>
+    <a class="btn btn-success btn-lg" href="{% url 'hospital_admin:appointment_add' %}">
+      <i class="fas fa-plus me-2"></i>Schedule Appointment
+    </a>
+  </div>
+
+  <!-- Search Section -->
+  <div class="card shadow-sm mb-4 animate-slide-up">
+    <div class="card-body">
+      <form class="d-flex gap-2 flex-wrap" method="GET">
+        <input 
+          name="q" 
+          value="{{ q }}" 
+          class="form-control" 
+          placeholder="🔍 Search by patient or doctor name..."
+          style="flex: 1; min-width: 200px;"
+        >
+        <button class="btn btn-outline-secondary" type="submit">
+          <i class="fas fa-search me-1"></i>Search
+        </button>
+        {% if q %}
+          <a href="{% url 'hospital_admin:appointments_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-times me-1"></i>Clear
+          </a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <!-- Appointments List -->
+  {% if appointments %}
+    <div class="animate-fadeIn">
+      {% for a in appointments %}
+        <div class="card appointment-card shadow-sm mb-3 hover-lift animate-slide-up">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <!-- Appointment Info -->
+              <div class="col-md-6">
+                <div class="d-flex align-items-start gap-3">
+                  <!-- Status Badge -->
+                  <div>
+                    <span class="badge bg-success p-2">
+                      <i class="fas fa-check-circle me-1"></i>Scheduled
+                    </span>
+                  </div>
+                  
+                  <!-- Details -->
+                  <div class="flex-grow-1">
+                    <h5 class="card-title mb-1">
+                      <i class="fas fa-user-injured text-hospital-primary me-2"></i>
+                      <strong>{{ a.patient }}</strong>
+                    </h5>
+                    <p class="text-muted small mb-2">
+                      <i class="fas fa-user-md text-hospital-green me-2"></i>
+                      with <strong>{{ a.doctor }}</strong>
+                    </p>
+                    <p class="small mb-0">
+                      <i class="fas fa-calendar-alt text-warning me-2"></i>
+                      {{ a.scheduled_at|date:"M d, Y \a\t H:i A" }}
+                    </p>
+                    {% if a.reason %}
+                      <p class="small text-muted mt-2 mb-0">
+                        <i class="fas fa-notes-medical me-2"></i>
+                        <strong>Reason:</strong> {{ a.reason }}
+                      </p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="{% url 'hospital_admin:appointment_delete' a.pk %}">
+                        <i class="fas fa-trash text-danger me-2"></i>Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center py-5 animate-fadeIn">
+      <i class="fas fa-calendar-times me-2" style="font-size: 2rem;"></i>
+      <h4>No appointments found</h4>
+      <p class="text-muted mb-3">
+        {% if q %}
+          No appointments match your search. Try a different search term.
+        {% else %}
+          Get started by <a href="{% url 'hospital_admin:appointment_add' %}">scheduling an appointment</a>
+        {% endif %}
+      </p>
+      {% if q %}
+        <a href="{% url 'hospital_admin:appointments_list' %}" class="btn btn-outline-secondary">
+          <i class="fas fa-sync me-1"></i>View All Appointments
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .appointment-card {
+    border-left: 4px solid #0066CC;
+    transition: all 0.3s ease;
+  }
+
+  .appointment-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 102, 204, 0.12) !important;
+    transform: translateY(-2px);
+  }
+
+  .hospital-heading {
+    font-size: 2.5rem;
+    color: #0066CC;
+    font-weight: 700;
+  }
+
+  .text-hospital-primary {
+    color: #0066CC;
+  }
+
+  .text-hospital-green {
+    color: #00B386;
+  }
+</style>
+{% endblock %}
