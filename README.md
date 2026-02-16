@@ -1,5 +1,7 @@
 # Smart Hospital (Django)
 
+![Release](https://img.shields.io/github/v/release/muhammeduvais1/smart_hospital?style=flat-square)
+
 A complete smart hospital management system with doctors, patients, nurses, appointments, medical records, role-based access, and doctor availability scheduling.
 
 ## Features
