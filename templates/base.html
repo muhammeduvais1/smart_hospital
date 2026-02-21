@@ -3,124 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Smart Hospital Management System{% endblock %}</title>
+    <meta name="description" content="Smart Hospital Management System — Manage doctors, patients, appointments, and medical records efficiently.">
+    <title>{% block title %}Smart Hospital{% endblock %}</title>
+
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Theme -->
     <link rel="stylesheet" href="/static/css/styles.css">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    {% load hospital_tags %}
-    
-    <!-- Top Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark hospital-navbar sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="fas fa-hospital"></i> Smart Hospital
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> {{ user.username }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navDropdown">
-                                {% if user.is_staff or user|has_group:'Admin' %}
-                                    <li><a class="dropdown-item" href="/admin/"><i class="fas fa-cog"></i> Admin Panel</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                {% endif %}
-                                <li><a class="dropdown-item" href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-sm btn-light ms-2" href="/accounts/login/">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% load hospital_tags %}
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar Navigation -->
+<!-- ========== TOP NAVBAR ========== -->
+<nav class="hospital-navbar navbar navbar-expand-lg sticky-top">
+    <div class="container-fluid px-3">
+
+        <!-- Brand -->
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-hospital-alt"></i>
+            Smart<span style="color:var(--accent-green)">Hospital</span>
+        </a>
+
+        <!-- Mobile sidebar toggle -->
+        {% if user.is_authenticated %}
+        <button class="btn btn-outline-secondary btn-sm d-md-none me-2" id="sidebarToggle" type="button">
+            <i class="fas fa-bars"></i>
+        </button>
+        {% endif %}
+
+        <!-- Right side -->
+        <div class="ms-auto d-flex align-items-center gap-2">
             {% if user.is_authenticated %}
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-                <div class="position-sticky pt-4">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">
-                                <i class="fas fa-home"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item mt-3">
-                            <a class="nav-link dropdown-toggle" href="#" id="medicalDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-heartbeat"></i> Medical
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="medicalDropdown">
-                                <li><a class="dropdown-item" href="/doctors/"><i class="fas fa-user-md"></i> Doctors</a></li>
-                                <li><a class="dropdown-item" href="/patients/"><i class="fas fa-hospital-user"></i> Patients</a></li>
-                                <li><a class="dropdown-item" href="/nurses/"><i class="fas fa-user-nurse"></i> Nurses</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link dropdown-toggle" href="#" id="appointmentDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-calendar-alt"></i> Appointments
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="appointmentDropdown">
-                                <li><a class="dropdown-item" href="/appointments/"><i class="fas fa-list"></i> All Appointments</a></li>
-                                <li><a class="dropdown-item" href="/appointments/add/"><i class="fas fa-plus-circle"></i> Schedule New</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/records/">
-                                <i class="fas fa-file-medical"></i> Medical Records
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/chatbot/">
-                                <i class="fas fa-robot"></i> ChatBot Assistant
+                <!-- Notification bell (decorative) -->
+                <button class="btn btn-outline-secondary btn-sm position-relative" style="border-radius:50%;width:36px;height:36px;padding:0;">
+                    <i class="fas fa-bell" style="font-size:0.85rem;"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge" style="background:var(--accent-red);padding:3px 5px;font-size:0.6rem;">3</span>
+                </button>
+
+                <!-- User dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown" style="border-radius:50px;">
+                        <div style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:white;">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                        <span class="d-none d-sm-inline" style="font-size:0.85rem;font-weight:600;">{{ user.username }}</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        {% if user.is_staff or user|has_group:'Admin' %}
+                            <li>
+                                <a class="dropdown-item" href="/admin/">
+                                    <i class="fas fa-cog"></i> Admin Panel
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                        {% endif %}
+                        <li>
+                            <a class="dropdown-item" href="/accounts/logout/">
+                                <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         </li>
                     </ul>
                 </div>
-            </nav>
+            {% else %}
+                <a class="btn btn-primary btn-sm" href="/accounts/login/">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
             {% endif %}
-
-            <!-- Main Content -->
-            <main class="col-md-{% if user.is_authenticated %}9{% else %}12{% endif %} ms-sm-auto px-md-4 main-content">
-                {% if messages %}
-                    <div class="messages mt-3">
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                {% block content %}{% endblock %}
-            </main>
         </div>
     </div>
+</nav>
 
-    <!-- Footer -->
-    <footer class="hospital-footer mt-5 py-4 text-center text-muted">
-        <div class="container">
-            <p>&copy; 2026 Smart Hospital Management System. All rights reserved.</p>
-            <p class="small">Providing quality healthcare management solutions</p>
+<!-- ========== BODY WRAPPER ========== -->
+<div class="d-flex" style="flex:1;min-height:calc(100vh - 61px);">
+
+    <!-- ========== SIDEBAR ========== -->
+    {% if user.is_authenticated %}
+    <nav class="sidebar d-none d-md-block" id="mainSidebar" style="width:230px;flex-shrink:0;">
+
+        <!-- Overview -->
+        <p class="sidebar-section-label">Overview</p>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+            </li>
+        </ul>
+
+        <!-- People -->
+        <p class="sidebar-section-label">People</p>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if '/doctors/' in request.path %}active{% endif %}" href="/doctors/">
+                    <i class="fas fa-user-md"></i> Doctors
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if '/patients/' in request.path %}active{% endif %}" href="/patients/">
+                    <i class="fas fa-procedures"></i> Patients
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if '/nurses/' in request.path %}active{% endif %}" href="/nurses/">
+                    <i class="fas fa-user-nurse"></i> Nurses
+                </a>
+            </li>
+        </ul>
+
+        <!-- Scheduling -->
+        <p class="sidebar-section-label">Scheduling</p>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if '/appointments/' in request.path %}active{% endif %}" href="/appointments/">
+                    <i class="fas fa-calendar-alt"></i> Appointments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if '/calendar' in request.path %}active{% endif %}" href="/calendar/">
+                    <i class="fas fa-calendar-week"></i> Calendar
+                </a>
+            </li>
+        </ul>
+
+        <!-- Clinical -->
+        <p class="sidebar-section-label">Clinical</p>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if '/records/' in request.path %}active{% endif %}" href="/records/">
+                    <i class="fas fa-file-medical"></i> Medical Records
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if '/test-results/' in request.path %}active{% endif %}" href="/patients/">
+                    <i class="fas fa-vials"></i> Test Results
+                </a>
+            </li>
+        </ul>
+
+        <!-- AI Tools -->
+        <p class="sidebar-section-label">AI Tools</p>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if '/chatbot/' in request.path and 'sessions' not in request.path %}active{% endif %}" href="/chatbot/">
+                    <i class="fas fa-robot"></i> AI Assistant
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if 'sessions' in request.path %}active{% endif %}" href="/chatbot/sessions/">
+                    <i class="fas fa-history"></i> Chat History
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+    {% endif %}
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="main-content" style="flex:1;min-width:0;overflow-x:hidden;">
+
+        <!-- Flash messages -->
+        {% if messages %}
+        <div class="mb-3" style="margin-top:-0.5rem;">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate-fadeIn" role="alert">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
         </div>
-    </footer>
+        {% endif %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    {% block extra_js %}{% endblock %}
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer class="hospital-footer d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div>
+        <i class="fas fa-hospital-alt me-2" style="color:var(--accent-blue);"></i>
+        <strong>Smart Hospital</strong> Management System &copy; 2026
+    </div>
+    <div style="font-size:0.78rem;">
+        <span class="badge bg-success me-1"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Operational</span>
+        Providing quality healthcare management
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Mobile sidebar toggle
+const sidebarToggle = document.getElementById('sidebarToggle');
+const mainSidebar = document.getElementById('mainSidebar');
+if (sidebarToggle && mainSidebar) {
+    sidebarToggle.addEventListener('click', () => {
+        mainSidebar.classList.toggle('show');
+        mainSidebar.classList.toggle('d-none');
+        mainSidebar.classList.toggle('d-block');
+    });
+}
+
+// Auto-dismiss alerts after 4 seconds
+document.querySelectorAll('.alert').forEach(alert => {
+    setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+    }, 4000);
+});
+</script>
+
+{% block extra_js %}{% endblock %}
 </body>
 </html>

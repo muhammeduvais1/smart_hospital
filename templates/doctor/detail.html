@@ -1,36 +1,92 @@
 {% extends 'base.html' %}
 {% load hospital_tags %}
+{% block title %}Dr. {{ doctor.first_name }} {{ doctor.last_name }} — Smart Hospital{% endblock %}
 
 {% block content %}
-<div class="card p-4 shadow-sm">
-  <div class="d-flex justify-content-between">
-    <h3>{{ doctor.first_name }} {{ doctor.last_name }}</h3>
-    <div>
-      <a class="btn btn-sm btn-outline-secondary me-2" href="{% url 'doctor:update' doctor.pk %}">Edit</a>
-      {% if user.is_staff or user|has_group:'Admin' %}
-        <a class="btn btn-sm btn-outline-primary" href="{% url 'doctor:availability_list' doctor.pk %}">Manage Availability</a>
-      {% endif %}
+<div class="animate-fadeIn">
+
+  <!-- Back -->
+  <div class="mb-3">
+    <a href="{% url 'doctor:list' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i> All
+      Doctors</a>
+  </div>
+
+  <!-- Doctor Hero Card -->
+  <div class="medical-section mb-4">
+    <div class="d-flex align-items-center gap-4 flex-wrap">
+      <div class="avatar-circle" style="width:72px;height:72px;font-size:1.6rem;">
+        {{ doctor.first_name|slice:":1" }}{{ doctor.last_name|slice:":1" }}
+      </div>
+      <div style="flex:1;">
+        <h2 style="font-weight:800;margin-bottom:0.25rem;">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h2>
+        {% if doctor.specialty %}
+        <span class="badge bg-primary">{{ doctor.specialty }}</span>
+        {% endif %}
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="{% url 'doctor:update' doctor.pk %}" class="btn btn-outline-secondary btn-sm"><i
+            class="fas fa-edit"></i>
+          Edit</a>
+        {% if user.is_staff or user|has_group:'Admin' %}
+        <a href="{% url 'doctor:availability_list' doctor.pk %}" class="btn btn-primary btn-sm"><i
+            class="fas fa-clock"></i> Manage Schedule</a>
+        {% endif %}
+      </div>
     </div>
   </div>
-  <p class="text-muted">Specialty: {{ doctor.specialty }}</p>
 
-  <h5>Availability</h5>
-  <ul class="list-group mb-3">
-    {% for a in availabilities %}
-      <li class="list-group-item">{{ a.get_weekday_display }}: {{ a.start_time }} - {{ a.end_time }}</li>
-    {% empty %}
-      <li class="list-group-item text-muted">No availability set. <a href="{% url 'doctor:availability_list' doctor.pk %}">Add one</a></li>
-    {% endfor %}
-  </ul>
+  <div class="row g-4">
+    <!-- Availability -->
+    <div class="col-md-6">
+      <div class="medical-section h-100 mb-0">
+        <h5 class="mb-3" style="font-weight:700;"><i class="fas fa-clock" style="color:var(--accent-green);"></i>
+          Availability</h5>
+        {% if availabilities %}
+        <div class="d-flex flex-column gap-2">
+          {% for a in availabilities %}
+          <div class="d-flex align-items-center justify-content-between p-2"
+            style="background:var(--bg-surface);border-radius:var(--radius-sm);border:1px solid var(--border-subtle);">
+            <span class="badge bg-info">{{ a.get_weekday_display }}</span>
+            <span style="color:var(--text-secondary);font-size:0.875rem;">
+              <i class="fas fa-clock me-1"></i>{{ a.start_time }} — {{ a.end_time }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.875rem;">No availability set.
+          <a href="{% url 'doctor:availability_list' doctor.pk %}" style="color:var(--accent-blue);">Add a slot →</a>
+        </p>
+        {% endif %}
+      </div>
+    </div>
 
-  <h5>Upcoming Appointments</h5>
-  <ul class="list-group">
-    {% for ap in upcoming %}
-      <li class="list-group-item">{{ ap.scheduled_at }} — {{ ap.patient }}</li>
-    {% empty %}
-      <li class="list-group-item text-muted">No upcoming appointments.</li>
-    {% endfor %}
-  </ul>
+    <!-- Upcoming Appointments -->
+    <div class="col-md-6">
+      <div class="medical-section h-100 mb-0">
+        <h5 class="mb-3" style="font-weight:700;"><i class="fas fa-calendar-check"
+            style="color:var(--accent-blue);"></i> Upcoming Appointments</h5>
+        {% if upcoming %}
+        <div class="d-flex flex-column gap-2">
+          {% for ap in upcoming %}
+          <div class="d-flex align-items-center gap-3 p-2"
+            style="background:var(--bg-surface);border-radius:var(--radius-sm);border:1px solid var(--border-subtle);">
+            <div class="avatar-circle sm">{{ ap.patient.first_name|slice:":1" }}{{ ap.patient.last_name|slice:":1" }}
+            </div>
+            <div>
+              <div style="font-size:0.875rem;font-weight:600;color:var(--text-primary);">{{ ap.patient }}</div>
+              <div style="font-size:0.78rem;color:var(--text-muted);">
+                <i class="fas fa-clock me-1"></i>{{ ap.scheduled_at|date:"d M Y H:i" }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.875rem;">No upcoming appointments.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
-

@@ -58,12 +58,8 @@ def send_message(request):
             content=user_message
         )
         
-        # Get response from OpenAI
+        # Get response from Gemini API
         messages = chatbot.format_messages_for_api(session)
-        messages.append({
-            "role": "user",
-            "content": user_message
-        })
         
         assistant_response = chatbot.get_response(messages)
         

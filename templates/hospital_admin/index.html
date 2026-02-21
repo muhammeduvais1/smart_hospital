@@ -1,244 +1,259 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard - Smart Hospital{% endblock %}
+{% block title %}Dashboard — Smart Hospital{% endblock %}
 
 {% block content %}
 <div class="animate-fadeIn">
-    <!-- Header Section -->
-    <div class="medical-section mb-4">
-        <div class="row align-items-center">
-            <div class="col">
-                <h1 class="mb-1">
-                    <i class="fas fa-hospital"></i> Smart Hospital Management
-                </h1>
-                <p class="text-muted mb-0">Welcome back, {{ user.first_name|default:user.username }}! Here's your hospital overview.</p>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-title">
+            <i class="fas fa-th-large"></i> Dashboard
+        </div>
+        <a href="{% url 'hospital_admin:appointment_add' %}" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i> Schedule Appointment
+        </a>
+    </div>
+
+    <p style="color:var(--text-muted);margin-top:-1rem;margin-bottom:1.75rem;font-size:0.875rem;">
+        Welcome back, <strong style="color:var(--text-secondary);">{{ user.first_name|default:user.username }}</strong>
+        — here's your hospital at a glance.
+    </p>
+
+    <!-- KPI Stat Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card animate-slideUp">
+                <i class="fas fa-user-md stat-icon"></i>
+                <h6><i class="fas fa-circle" style="color:var(--accent-blue);font-size:0.5rem;"></i> Total Doctors</h6>
+                <div class="stat-number">{{ counts.doctors }}</div>
+                <small>Healthcare providers</small>
             </div>
-            <div class="col-auto">
-                <a href="{% url 'hospital_admin:appointment_add' %}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-calendar-plus"></i> Schedule Appointment
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card success animate-slideUp delay-1">
+                <i class="fas fa-procedures stat-icon"></i>
+                <h6><i class="fas fa-circle" style="color:var(--accent-green);font-size:0.5rem;"></i> Total Patients
+                </h6>
+                <div class="stat-number">{{ counts.patients }}</div>
+                <small>Registered patients</small>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card warning animate-slideUp delay-2">
+                <i class="fas fa-calendar-check stat-icon"></i>
+                <h6><i class="fas fa-circle" style="color:var(--accent-yellow);font-size:0.5rem;"></i> Appointments</h6>
+                <div class="stat-number">{{ counts.appointments }}</div>
+                <small>Total scheduled</small>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card danger animate-slideUp delay-3">
+                <i class="fas fa-user-nurse stat-icon"></i>
+                <h6><i class="fas fa-circle" style="color:var(--accent-red);font-size:0.5rem;"></i> Nursing Staff</h6>
+                <div class="stat-number">{{ counts.nurses|default:"—" }}</div>
+                <small>Active nurses</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Access Grid -->
+    <div class="medical-section animate-slideUp delay-1">
+        <h5 class="mb-4" style="font-weight:700;"><i class="fas fa-bolt" style="color:var(--accent-yellow);"></i> Quick
+            Access</h5>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/doctors/" class="feature-card">
+                    <i class="fas fa-user-md"></i>
+                    <h5>Doctors</h5>
+                    <p>View and manage medical professionals</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/patients/" class="feature-card">
+                    <i class="fas fa-procedures"></i>
+                    <h5>Patients</h5>
+                    <p>Patient records and medical history</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/nurses/" class="feature-card">
+                    <i class="fas fa-user-nurse"></i>
+                    <h5>Nurses</h5>
+                    <p>Nursing staff management</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/appointments/" class="feature-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h5>Appointments</h5>
+                    <p>Schedule and manage appointments</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/calendar/" class="feature-card">
+                    <i class="fas fa-calendar-week"></i>
+                    <h5>Calendar</h5>
+                    <p>Visual appointment calendar</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/records/" class="feature-card">
+                    <i class="fas fa-file-medical"></i>
+                    <h5>Medical Records</h5>
+                    <p>Patient medical history &amp; notes</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/chatbot/" class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h5>AI Assistant</h5>
+                    <p>Chat with the hospital AI</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/chatbot/sessions/" class="feature-card">
+                    <i class="fas fa-history"></i>
+                    <h5>Chat History</h5>
+                    <p>Revisit previous conversations</p>
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3 col-sm-6 mb-3 animate-slideUp">
-            <div class="stat-card">
-                <h6><i class="fas fa-user-md"></i> Total Doctors</h6>
-                <div class="stat-number">{{ counts.doctors }}</div>
-                <small class="text-muted">Healthcare providers</small>
-            </div>
+    <!-- Upcoming Appointments -->
+    <div class="medical-section animate-slideUp delay-2">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="mb-0" style="font-weight:700;">
+                <i class="fas fa-calendar-check" style="color:var(--accent-blue);"></i> Upcoming Appointments
+            </h5>
+            <a href="/appointments/" class="btn btn-outline-primary btn-sm">
+                View All <i class="fas fa-arrow-right ms-1"></i>
+            </a>
         </div>
-        <div class="col-md-3 col-sm-6 mb-3 animate-slideUp" style="animation-delay: 0.1s;">
-            <div class="stat-card success">
-                <h6><i class="fas fa-hospital-user"></i> Total Patients</h6>
-                <div class="stat-number">{{ counts.patients }}</div>
-                <small class="text-muted">Registered patients</small>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3 animate-slideUp" style="animation-delay: 0.2s;">
-            <div class="stat-card warning">
-                <h6><i class="fas fa-calendar-check"></i> Appointments</h6>
-                <div class="stat-number">{{ counts.appointments }}</div>
-                <small class="text-muted">Total scheduled</small>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3 animate-slideUp" style="animation-delay: 0.3s;">
-            <div class="stat-card danger">
-                <h6><i class="fas fa-user-nurse"></i> Total Nurses</h6>
-                <div class="stat-number">{{ counts.doctors }}</div>
-                <small class="text-muted">Nursing staff</small>
-            </div>
-        </div>
-    </div>
 
-    <!-- Quick Actions Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h4 class="mb-3">
-                <i class="fas fa-bolt"></i> Quick Access
-            </h4>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp">
-            <a href="/doctors/" class="feature-card text-decoration-none">
-                <i class="fas fa-user-md"></i>
-                <h5>Doctors</h5>
-                <p>View and manage medical professionals</p>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp" style="animation-delay: 0.1s;">
-            <a href="/patients/" class="feature-card text-decoration-none">
-                <i class="fas fa-hospital-user"></i>
-                <h5>Patients</h5>
-                <p>Manage patient records and history</p>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp" style="animation-delay: 0.2s;">
-            <a href="/appointments/" class="feature-card text-decoration-none">
-                <i class="fas fa-calendar-alt"></i>
-                <h5>Appointments</h5>
-                <p>Schedule and manage appointments</p>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp" style="animation-delay: 0.3s;">
-            <a href="/records/" class="feature-card text-decoration-none">
-                <i class="fas fa-file-medical"></i>
-                <h5>Medical Records</h5>
-                <p>Access patient medical history</p>
-            </a>
-        </div>
-    </div>
-
-    <!-- Features Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h4 class="mb-3">
-                <i class="fas fa-star"></i> Key Features
-            </h4>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp">
-            <a href="/nurses/" class="feature-card text-decoration-none">
-                <i class="fas fa-user-nurse"></i>
-                <h5>Nursing Staff</h5>
-                <p>Manage nurse schedules and assignments</p>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp" style="animation-delay: 0.1s;">
-            <a href="/doctors/availability/" class="feature-card text-decoration-none">
-                <i class="fas fa-clock"></i>
-                <h5>Doctor Schedule</h5>
-                <p>View doctor availability and time slots</p>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp" style="animation-delay: 0.2s;">
-            <a href="/chatbot/" class="feature-card text-decoration-none">
-                <i class="fas fa-robot"></i>
-                <h5>AI Assistant</h5>
-                <p>Chat with hospital AI assistant</p>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-3 animate-slideUp" style="animation-delay: 0.3s;">
-            <a href="/chatbot/sessions/" class="feature-card text-decoration-none">
-                <i class="fas fa-history"></i>
-                <h5>Chat History</h5>
-                <p>View previous conversations</p>
-            </a>
-        </div>
-    </div>
-
-    <!-- Upcoming Appointments Section -->
-    <div class="medical-section animate-slideUp">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0">
-                <i class="fas fa-calendar-check"></i> Upcoming Appointments
-            </h4>
-            <a href="/appointments/" class="btn btn-sm btn-outline-primary">
-                View All <i class="fas fa-arrow-right ms-2"></i>
-            </a>
-        </div>
-        
         {% if upcoming %}
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Date & Time</th>
-                            <th>Patient</th>
-                            <th>Doctor</th>
-                            <th>Reason</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for a in upcoming %}
-                            <tr>
-                                <td>
-                                    <i class="fas fa-calendar-alt text-primary me-2"></i>
-                                    {{ a.scheduled_at|date:"d M Y H:i" }}
-                                </td>
-                                <td>
-                                    <a href="{% url 'patient:detail' a.patient.pk %}" class="text-decoration-none">
-                                        {{ a.patient.first_name }} {{ a.patient.last_name }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="{% url 'doctor:detail' a.doctor.pk %}" class="text-decoration-none">
-                                        {{ a.doctor.first_name }} {{ a.doctor.last_name }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <span class="badge bg-info">{{ a.reason|truncatewords:3 }}</span>
-                                </td>
-                                <td>
-                                    <a href="{% url 'hospital_admin:appointment_delete' a.pk %}" class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date &amp; Time</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Reason</th>
+                        <th style="text-align:right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in upcoming %}
+                    <tr>
+                        <td>
+                            <span style="color:var(--accent-cyan);">
+                                <i class="fas fa-clock me-1"></i>{{ a.scheduled_at|date:"d M Y H:i" }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'patient:detail' a.patient.pk %}"
+                                style="color:var(--text-primary);font-weight:600;text-decoration:none;">
+                                {{ a.patient.first_name }} {{ a.patient.last_name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'doctor:detail' a.doctor.pk %}"
+                                style="color:var(--text-secondary);text-decoration:none;">
+                                <i class="fas fa-user-md me-1" style="color:var(--accent-green);"></i>{{
+                                a.doctor.first_name }} {{ a.doctor.last_name }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ a.reason|truncatewords:4 }}</span>
+                        </td>
+                        <td style="text-align:right;">
+                            <a href="{% url 'hospital_admin:appointment_delete' a.pk %}"
+                                class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="alert alert-info mb-0">
-                <i class="fas fa-info-circle me-2"></i> No upcoming appointments scheduled. 
-                <a href="{% url 'hospital_admin:appointment_add' %}" class="alert-link">Schedule one now</a>
-            </div>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            No upcoming appointments scheduled.
+            <a href="{% url 'hospital_admin:appointment_add' %}" class="ms-1" style="color:var(--accent-cyan);">Schedule
+                one now →</a>
+        </div>
         {% endif %}
     </div>
 
-    <!-- System Information Section -->
-    <div class="row mt-4">
-        <div class="col-md-6 animate-slideUp">
-            <div class="medical-section">
-                <h5 class="mb-3">
-                    <i class="fas fa-info-circle"></i> Hospital Information
-                </h5>
-                <dl class="row mb-0">
-                    <dt class="col-sm-6">System Version</dt>
-                    <dd class="col-sm-6">1.0.0</dd>
-                    <dt class="col-sm-6">Status</dt>
-                    <dd class="col-sm-6"><span class="badge bg-success">Operational</span></dd>
-                    <dt class="col-sm-6">Last Updated</dt>
-                    <dd class="col-sm-6">February 16, 2026</dd>
-                </dl>
-            </div>
-        </div>
-        <div class="col-md-6 animate-slideUp" style="animation-delay: 0.1s;">
-            <div class="medical-section">
-                <h5 class="mb-3">
-                    <i class="fas fa-cog"></i> System Features
-                </h5>
-                <div class="feature-list">
-                    <div class="mb-2">
-                        <i class="fas fa-check text-success me-2"></i> Patient Management
-                    </div>
-                    <div class="mb-2">
-                        <i class="fas fa-check text-success me-2"></i> Doctor Scheduling
-                    </div>
-                    <div class="mb-2">
-                        <i class="fas fa-check text-success me-2"></i> Appointment Booking
-                    </div>
-                    <div class="mb-2">
-                        <i class="fas fa-check text-success me-2"></i> Medical Records
-                    </div>
-                    <div class="mb-2">
-                        <i class="fas fa-check text-success me-2"></i> Test Results
-                    </div>
-                    <div>
-                        <i class="fas fa-check text-success me-2"></i> AI Chat Assistant
-                    </div>
+    <!-- Bottom Info Row -->
+    <div class="row g-3 animate-slideUp delay-3">
+        <!-- System Info -->
+        <div class="col-md-6">
+            <div class="medical-section mb-0">
+                <h6 class="mb-3"
+                    style="font-weight:700;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);">
+                    <i class="fas fa-info-circle me-1" style="color:var(--accent-blue);"></i> System Info
+                </h6>
+                <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-subtle);">
+                    <span style="color:var(--text-muted);font-size:0.875rem;">Version</span>
+                    <span style="color:var(--text-primary);font-weight:600;font-size:0.875rem;">1.0.0</span>
+                </div>
+                <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-subtle);">
+                    <span style="color:var(--text-muted);font-size:0.875rem;">Status</span>
+                    <span class="badge bg-success"><i class="fas fa-circle" style="font-size:0.5rem;"></i>
+                        Operational</span>
+                </div>
+                <div class="d-flex justify-content-between py-2">
+                    <span style="color:var(--text-muted);font-size:0.875rem;">Last Updated</span>
+                    <span style="color:var(--text-primary);font-weight:600;font-size:0.875rem;">February 21, 2026</span>
                 </div>
             </div>
         </div>
+
+        <!-- Feature List -->
+        <div class="col-md-6">
+            <div class="medical-section mb-0">
+                <h6 class="mb-3"
+                    style="font-weight:700;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);">
+                    <i class="fas fa-check-circle me-1" style="color:var(--accent-green);"></i> Active Features
+                </h6>
+                {% for feat in features %}
+                <div class="d-flex align-items-center gap-2 py-2"
+                    style="border-bottom:1px solid var(--border-subtle);font-size:0.875rem;">
+                    <i class="fas fa-check-circle" style="color:var(--accent-green);font-size:0.75rem;"></i>
+                    <span style="color:var(--text-secondary);">{{ feat }}</span>
+                </div>
+                {% empty %}
+                <div class="d-flex align-items-center gap-2 py-2"
+                    style="border-bottom:1px solid var(--border-subtle);font-size:0.875rem;"><i
+                        class="fas fa-check-circle" style="color:var(--accent-green);font-size:0.75rem;"></i><span
+                        style="color:var(--text-secondary);">Patient Management</span></div>
+                <div class="d-flex align-items-center gap-2 py-2"
+                    style="border-bottom:1px solid var(--border-subtle);font-size:0.875rem;"><i
+                        class="fas fa-check-circle" style="color:var(--accent-green);font-size:0.75rem;"></i><span
+                        style="color:var(--text-secondary);">Doctor Scheduling</span></div>
+                <div class="d-flex align-items-center gap-2 py-2"
+                    style="border-bottom:1px solid var(--border-subtle);font-size:0.875rem;"><i
+                        class="fas fa-check-circle" style="color:var(--accent-green);font-size:0.75rem;"></i><span
+                        style="color:var(--text-secondary);">Appointment Booking</span></div>
+                <div class="d-flex align-items-center gap-2 py-2"
+                    style="border-bottom:1px solid var(--border-subtle);font-size:0.875rem;"><i
+                        class="fas fa-check-circle" style="color:var(--accent-green);font-size:0.75rem;"></i><span
+                        style="color:var(--text-secondary);">Medical Records</span></div>
+                <div class="d-flex align-items-center gap-2 py-2"
+                    style="border-bottom:1px solid var(--border-subtle);font-size:0.875rem;"><i
+                        class="fas fa-check-circle" style="color:var(--accent-green);font-size:0.75rem;"></i><span
+                        style="color:var(--text-secondary);">Test Results</span></div>
+                <div class="d-flex align-items-center gap-2 py-2" style="font-size:0.875rem;"><i
+                        class="fas fa-check-circle" style="color:var(--accent-green);font-size:0.75rem;"></i><span
+                        style="color:var(--text-secondary);">AI Chat Assistant</span></div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+
 </div>
-
-<style>
-    .feature-list div {
-        padding: 0.5rem 0;
-        color: var(--gray-600);
-    }
-</style>
 {% endblock %}
-

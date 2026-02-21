@@ -1,59 +1,74 @@
 {% extends 'base.html' %}
 {% load hospital_tags %}
+{% block title %}Dr. {{ doctor.first_name }} {{ doctor.last_name }} — Schedule — Smart Hospital{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-md-8">
-    <div class="card p-4 shadow-sm">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>{{ doctor.first_name }} {{ doctor.last_name }} — Schedule</h3>
-        <a href="{% url 'doctor:detail' doctor.pk %}" class="btn btn-outline-secondary">Back</a>
-      </div>
+<div class="animate-fadeIn">
 
-      <div class="mb-4">
-        <a href="{% url 'doctor:availability_create' doctor.pk %}" class="btn btn-success">+ Add Time Slot</a>
-      </div>
-
-      <h5>Weekly Schedule</h5>
-      <div class="table-responsive">
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>Day</th>
-              <th>Start Time</th>
-              <th>End Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for avail in availabilities %}
-              <tr class="animate-slide-up">
-                <td><strong>{{ avail.get_weekday_display }}</strong></td>
-                <td>{{ avail.start_time }}</td>
-                <td>{{ avail.end_time }}</td>
-                <td>
-                  <a href="{% url 'doctor:availability_delete' doctor.pk avail.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
-                </td>
-              </tr>
-            {% empty %}
-              <tr>
-                <td colspan="4" class="text-muted text-center py-4">No availability slots. <a href="{% url 'doctor:availability_create' doctor.pk %}">Add one</a></td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-clock"></i> Schedule — Dr. {{ doctor.first_name }} {{ doctor.last_name }}
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'doctor:availability_create' doctor.pk %}" class="btn btn-success btn-sm"><i
+          class="fas fa-plus"></i> Add Time Slot</a>
+      <a href="{% url 'doctor:detail' doctor.pk %}" class="btn btn-outline-secondary btn-sm"><i
+          class="fas fa-arrow-left"></i> Back</a>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card p-3 shadow-sm bg-light">
-      <h6>Tips</h6>
-      <ul class="small mb-0">
-        <li>Add time slots for each day you are available.</li>
-        <li>Times are checked when scheduling appointments.</li>
-        <li>Appointment times must fall within one of your slots.</li>
-      </ul>
+  <div class="row g-4">
+    <!-- Schedule Table -->
+    <div class="col-lg-8">
+      <div class="medical-section mb-0">
+        <h5 class="mb-3" style="font-weight:700;"><i class="fas fa-calendar-week" style="color:var(--accent-blue);"></i>
+          Weekly Availability</h5>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th style="text-align:right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for avail in availabilities %}
+              <tr>
+                <td><span class="badge bg-primary">{{ avail.get_weekday_display }}</span></td>
+                <td style="color:var(--accent-green);font-weight:600;"><i class="fas fa-clock me-1"></i>{{
+                  avail.start_time }}</td>
+                <td style="color:var(--accent-cyan);font-weight:600;">{{ avail.end_time }}</td>
+                <td style="text-align:right;">
+                  <a href="{% url 'doctor:availability_delete' doctor.pk avail.pk %}"
+                    class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center py-4" style="color:var(--text-muted);">
+                  No slots yet. <a href="{% url 'doctor:availability_create' doctor.pk %}"
+                    style="color:var(--accent-blue);">Add one →</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Card -->
+    <div class="col-lg-4">
+      <div class="medical-section mb-0" style="border-left:3px solid var(--accent-yellow);">
+        <h6 style="font-weight:700;color:var(--accent-yellow);"><i class="fas fa-lightbulb me-1"></i> Tips</h6>
+        <ul style="color:var(--text-muted);font-size:0.85rem;padding-left:1rem;margin:0;">
+          <li class="mb-2">Add one slot per day you are available.</li>
+          <li class="mb-2">Appointment times are validated against your slots.</li>
+          <li>You can have multiple slots per day for split shifts.</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

@@ -1,36 +1,78 @@
 {% extends 'base.html' %}
+{% block title %}Schedule Appointment — Smart Hospital{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card p-4 shadow-sm animate-slide-up">
-      <h2 class="mb-4">{{ title }}</h2>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        <div class="mb-3">
-          <label class="form-label"><strong>Patient</strong></label>
-          {{ form.patient }}
-        </div>
-        <div class="mb-3">
-          <label class="form-label"><strong>Doctor</strong></label>
-          {{ form.doctor }}
-        </div>
-        <div class="mb-3">
-          <label class="form-label"><strong>Appointment Date & Time</strong></label>
-          {{ form.scheduled_at }}
-        </div>
-        <div class="mb-3">
-          <label class="form-label"><strong>Reason for Visit</strong></label>
-          {{ form.reason }}
-        </div>
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-        {% endif %}
-        <div class="mt-4">
-          <button class="btn btn-lg btn-success">Schedule Appointment</button>
-          <a href="{% url 'hospital_admin:appointments' %}" class="btn btn-lg btn-secondary ms-2">Cancel</a>
-        </div>
-      </form>
+<div class="animate-fadeIn">
+
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-calendar-plus"></i> Schedule Appointment
+    </div>
+    <a href="{% url 'hospital_admin:appointments' %}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="medical-section">
+        <form method="POST" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger mb-3">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ form.non_field_errors }}
+          </div>
+          {% endif %}
+
+          <div class="mb-4">
+            <label class="form-label" for="id_patient">
+              <i class="fas fa-procedures" style="color:var(--accent-green);"></i> Patient
+            </label>
+            {{ form.patient }}
+            {% if form.patient.errors %}<div class="text-danger mt-1" style="font-size:0.8rem;">{{ form.patient.errors
+              }}</div>{% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label" for="id_doctor">
+              <i class="fas fa-user-md" style="color:var(--accent-blue);"></i> Doctor
+            </label>
+            {{ form.doctor }}
+            {% if form.doctor.errors %}<div class="text-danger mt-1" style="font-size:0.8rem;">{{ form.doctor.errors }}
+            </div>{% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label" for="id_scheduled_at">
+              <i class="fas fa-clock" style="color:var(--accent-yellow);"></i> Date &amp; Time
+            </label>
+            {{ form.scheduled_at }}
+            <div class="form-text"><i class="fas fa-info-circle me-1"></i>Must be within the doctor's available time
+              slots.</div>
+            {% if form.scheduled_at.errors %}<div class="text-danger mt-1" style="font-size:0.8rem;">{{
+              form.scheduled_at.errors }}</div>{% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label" for="id_reason">
+              <i class="fas fa-notes-medical" style="color:var(--accent-cyan);"></i> Reason
+              <span style="color:var(--text-muted);font-weight:400;">(optional)</span>
+            </label>
+            {{ form.reason }}
+            {% if form.reason.errors %}<div class="text-danger mt-1" style="font-size:0.8rem;">{{ form.reason.errors }}
+            </div>{% endif %}
+          </div>
+
+          <div class="d-flex gap-2 pt-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-calendar-check"></i> Confirm Appointment
+            </button>
+            <a href="{% url 'hospital_admin:appointments' %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

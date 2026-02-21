@@ -1,82 +1,68 @@
 {% extends "base.html" %}
-
-{% block title %}Chat Sessions{% endblock %}
+{% block title %}Chat History — Smart Hospital{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Chat Sessions</h2>
-                <a href="{% url 'create_session' %}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Start New Chat
-                </a>
-            </div>
+<div class="animate-fadeIn">
 
-            {% if sessions %}
-                <div class="row">
-                    {% for session in sessions %}
-                        <div class="col-md-6 mb-3 animate-fadeIn">
-                            <div class="card h-100 hover-shadow">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="{% url 'chatbot_detail' session.id %}" class="text-decoration-none">
-                                            {{ session.title }}
-                                        </a>
-                                    </h5>
-                                    <p class="card-text text-muted small">
-                                        <i class="fas fa-comments"></i> {{ session.messages.count }} message{{ session.messages.count|pluralize }}
-                                    </p>
-                                    <p class="card-text text-muted small">
-                                        <i class="fas fa-clock"></i> 
-                                        {% now "d M Y H:i" as today %}
-                                        Last updated: {{ session.updated_at|date:"d M Y H:i" }}
-                                    </p>
-                                </div>
-                                <div class="card-footer bg-light">
-                                    <div class="btn-group w-100" role="group">
-                                        <a href="{% url 'chatbot_detail' session.id %}" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-arrow-right"></i> Continue
-                                        </a>
-                                        <a href="{% url 'delete_session' session.id %}" class="btn btn-sm btn-outline-danger">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="alert alert-info" role="alert">
-                    <i class="fas fa-info-circle"></i> No chat sessions yet. 
-                    <a href="{% url 'create_session' %}" class="alert-link">Start a new chat</a>
-                </div>
-            {% endif %}
-        </div>
+    <div class="page-header">
+        <div class="page-title"><i class="fas fa-history"></i> Chat History</div>
+        <a href="{% url 'create_session' %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus"></i> New Chat
+        </a>
     </div>
+
+    {% if sessions %}
+    <div class="row g-3">
+        {% for session in sessions %}
+        <div class="col-sm-6 col-lg-4 animate-slideUp">
+            <div class="card h-100" style="transition:all 0.3s;cursor:pointer;"
+                onmouseover="this.style.borderColor='var(--accent-blue)';this.style.transform='translateY(-4px)'"
+                onmouseout="this.style.borderColor='var(--border-subtle)';this.style.transform='none'">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div
+                            style="width:36px;height:36px;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-robot" style="color:white;font-size:0.85rem;"></i>
+                        </div>
+                        <div style="flex:1;min-width:0;">
+                            <a href="{% url 'chatbot_detail' session.id %}"
+                                style="color:var(--text-primary);font-weight:700;font-size:0.9rem;text-decoration:none;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                {{ session.title }}
+                            </a>
+                        </div>
+                    </div>
+                    <div style="font-size:0.78rem;color:var(--text-muted);">
+                        <i class="fas fa-comment-dots me-1"></i>{{ session.messages.count }} message{{
+                        session.messages.count|pluralize }}
+                        &nbsp;&bull;&nbsp;
+                        <i class="fas fa-clock me-1"></i>{{ session.updated_at|date:"d M Y" }}
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0;border-top:1px solid var(--border-subtle);">
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'chatbot_detail' session.id %}"
+                            class="btn btn-outline-primary btn-sm flex-grow-1">
+                            <i class="fas fa-arrow-right"></i> Continue
+                        </a>
+                        <a href="{% url 'delete_session' session.id %}" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="text-center py-5" style="color:var(--text-muted);">
+        <i class="fas fa-comments"
+            style="font-size:4rem;opacity:0.2;display:block;margin-bottom:1rem;color:var(--accent-blue);"></i>
+        <h5 style="color:var(--text-secondary);">No chat sessions yet</h5>
+        <a href="{% url 'create_session' %}" class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i> Start a
+            Chat</a>
+    </div>
+    {% endif %}
+
 </div>
-
-<style>
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-
-    .animate-fadeIn {
-        animation: fadeIn 0.5s ease-out;
-    }
-
-    .hover-shadow {
-        transition: box-shadow 0.3s ease;
-    }
-
-    .hover-shadow:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-</style>
 {% endblock %}

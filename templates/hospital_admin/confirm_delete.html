@@ -1,13 +1,29 @@
 {% extends 'base.html' %}
+{% block title %}Confirm Delete — Smart Hospital{% endblock %}
 
 {% block content %}
-<div class="card p-4 shadow-sm">
-  <h2 class="mb-3">{{ title }}</h2>
-  <p>Are you sure you want to delete <strong>{{ object }}</strong>?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button class="btn btn-danger">Yes, delete</button>
-    <a href="javascript:history.back()" class="btn btn-secondary ms-2">Cancel</a>
-  </form>
+<div class="animate-fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="medical-section text-center">
+        <div
+          style="width:64px;height:64px;background:rgba(244,63,94,0.15);border:2px solid var(--accent-red);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+          <i class="fas fa-trash" style="font-size:1.5rem;color:var(--accent-red);"></i>
+        </div>
+        <h4 style="font-weight:700;margin-bottom:0.5rem;">Confirm Deletion</h4>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.75rem;">
+          Are you sure you want to delete <strong style="color:var(--text-primary);">{{ object }}</strong>? This action
+          cannot be undone.
+        </p>
+        <form method="POST" class="d-flex justify-content-center gap-3">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Yes, Delete</button>
+          <a href="{{ cancel_url|default:'javascript:history.back()' }}" class="btn btn-outline-secondary">
+            <i class="fas fa-times"></i> Cancel
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

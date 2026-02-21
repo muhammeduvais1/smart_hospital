@@ -1,279 +1,204 @@
 {% extends 'base.html' %}
 {% load hospital_tags %}
+{% block title %}{{ patient.first_name }} {{ patient.last_name }} — Smart Hospital{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <!-- Patient Info Header -->
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <div class="card p-4 shadow-sm animate-fadeIn">
-        <div class="row">
-          <div class="col-md-8">
-            <h2>{{ patient.first_name }} {{ patient.last_name }}</h2>
-            <p class="text-muted">
-              <i class="fas fa-birthday-cake"></i> DOB: {{ patient.dob|date:"d M Y" }}
-            </p>
-            {% if patient.email %}
-              <p class="text-muted">
-                <i class="fas fa-envelope"></i> {{ patient.email }}
-              </p>
-            {% endif %}
-            {% if patient.phone %}
-              <p class="text-muted">
-                <i class="fas fa-phone"></i> {{ patient.phone }}
-              </p>
-            {% endif %}
-          </div>
-          <div class="col-md-4 text-end">
-            {% if user|has_group:'Admin' %}
-              <a href="{% url 'patient:update' patient.pk %}" class="btn btn-outline-secondary">
-                <i class="fas fa-edit"></i> Edit Patient
-              </a>
-            {% endif %}
-          </div>
+<div class="animate-fadeIn">
+
+  <!-- Back -->
+  <div class="mb-3">
+    <a href="{% url 'patient:list' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i> All
+      Patients</a>
+  </div>
+
+  <!-- Patient Hero Card -->
+  <div class="medical-section mb-4">
+    <div class="d-flex align-items-center gap-4 flex-wrap">
+      <div class="avatar-circle green" style="width:72px;height:72px;font-size:1.6rem;">
+        {{ patient.first_name|slice:":1" }}{{ patient.last_name|slice:":1" }}
+      </div>
+      <div style="flex:1;">
+        <h2 style="font-weight:800;margin-bottom:0.4rem;">{{ patient.first_name }} {{ patient.last_name }}</h2>
+        <div class="d-flex flex-wrap gap-3" style="font-size:0.85rem;color:var(--text-muted);">
+          {% if patient.dob %}
+          <span><i class="fas fa-birthday-cake me-1" style="color:var(--accent-yellow);"></i>{{ patient.dob|date:"d M Y"
+            }}</span>
+          {% endif %}
+          {% if patient.email %}
+          <span><i class="fas fa-envelope me-1" style="color:var(--accent-blue);"></i>{{ patient.email }}</span>
+          {% endif %}
+          {% if patient.phone %}
+          <span><i class="fas fa-phone me-1" style="color:var(--accent-green);"></i>{{ patient.phone }}</span>
+          {% endif %}
         </div>
       </div>
+      {% if user|has_group:'Admin' %}
+      <a href="{% url 'patient:update' patient.pk %}" class="btn btn-outline-secondary btn-sm"><i
+          class="fas fa-edit"></i>
+        Edit Patient</a>
+      {% endif %}
     </div>
   </div>
 
-  <!-- Tabs for different sections -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="records-tab" data-bs-toggle="tab" data-bs-target="#records" type="button" role="tab">
-        <i class="fas fa-file-medical"></i> Medical Records
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-0" id="patientTabs" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#records" type="button">
+        <i class="fas fa-file-medical me-1"></i> Medical Records
       </button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="appointments-tab" data-bs-toggle="tab" data-bs-target="#appointments" type="button" role="tab">
-        <i class="fas fa-calendar"></i> Appointments
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#appointments" type="button">
+        <i class="fas fa-calendar me-1"></i> Appointments
       </button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tests" type="button" role="tab">
-        <i class="fas fa-flask"></i> Test Results
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tests" type="button">
+        <i class="fas fa-vials me-1"></i> Test Results
       </button>
     </li>
   </ul>
 
-  <!-- Tab Content -->
-  <div class="tab-content mt-4">
+  <div class="tab-content"
+    style="background:var(--bg-card);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 var(--radius-md) var(--radius-md);padding:1.5rem;">
+
     <!-- Medical Records Tab -->
-    <div class="tab-pane fade show active" id="records" role="tabpanel">
-      <div class="card">
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Medical Records</h5>
-          {% if user|has_group:'Admin' %}
-            <a href="{% url 'hospital_admin:record_add' %}" class="btn btn-sm btn-success">
-              <i class="fas fa-plus"></i> Add Record
-            </a>
-          {% endif %}
-        </div>
-        <div class="card-body">
-          {% if records %}
-            <div class="list-group">
-              {% for r in records %}
-                <div class="list-group-item animate-slideUp">
-                  <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                      <h6 class="mb-2">
-                        <i class="fas fa-note-medical"></i> Medical Record
-                      </h6>
-                      <p class="mb-2">{{ r.notes|linebreaks }}</p>
-                      <small class="text-muted">
-                        <i class="fas fa-calendar"></i> {{ r.created_at|date:"d M Y H:i" }}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          {% else %}
-            <div class="alert alert-info" role="alert">
-              <i class="fas fa-info-circle"></i> No medical records yet.
-            </div>
-          {% endif %}
-        </div>
+    <div class="tab-pane fade show active" id="records">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6
+          style="font-weight:700;color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.8px;">
+          Records</h6>
+        {% if user|has_group:'Admin' %}
+        <a href="{% url 'hospital_admin:record_add' %}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i>
+          Add</a>
+        {% endif %}
       </div>
+      {% if records %}
+      <div class="d-flex flex-column gap-3">
+        {% for r in records %}
+        <div
+          style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:1rem;">
+          <div style="color:var(--text-primary);font-size:0.9rem;margin-bottom:0.5rem;">{{ r.notes|linebreaks }}</div>
+          <small style="color:var(--text-muted);"><i class="fas fa-calendar me-1"></i>{{ r.created_at|date:"d M Y H:i"
+            }}</small>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info"><i class="fas fa-info-circle"></i> No medical records yet.</div>
+      {% endif %}
     </div>
 
     <!-- Appointments Tab -->
-    <div class="tab-pane fade" id="appointments" role="tabpanel">
-      <div class="card">
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Appointments</h5>
-          {% if user|has_group:'Admin' %}
-            <a href="{% url 'hospital_admin:appointment_add' %}" class="btn btn-sm btn-success">
-              <i class="fas fa-plus"></i> Schedule Appointment
-            </a>
-          {% endif %}
-        </div>
-        <div class="card-body">
-          {% if appointments %}
-            <div class="list-group">
-              {% for a in appointments %}
-                <div class="list-group-item animate-slideUp">
-                  <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                      <h6 class="mb-2">
-                        <i class="fas fa-stethoscope"></i> {{ a.doctor.first_name }} {{ a.doctor.last_name }}
-                      </h6>
-                      <p class="mb-2">{{ a.reason }}</p>
-                      <small class="text-muted">
-                        <i class="fas fa-calendar"></i> {{ a.scheduled_at|date:"d M Y H:i" }}
-                      </small>
-                    </div>
-                    {% if user|has_group:'Admin' %}
-                      <a href="{% url 'hospital_admin:appointment_delete' a.pk %}" class="btn btn-sm btn-outline-danger">
-                        <i class="fas fa-trash"></i>
-                      </a>
-                    {% endif %}
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          {% else %}
-            <div class="alert alert-info" role="alert">
-              <i class="fas fa-info-circle"></i> No appointments scheduled.
-            </div>
-          {% endif %}
-        </div>
+    <div class="tab-pane fade" id="appointments">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6
+          style="font-weight:700;color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.8px;">
+          Appointments</h6>
+        {% if user|has_group:'Admin' %}
+        <a href="{% url 'hospital_admin:appointment_add' %}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i>
+          Schedule</a>
+        {% endif %}
       </div>
+      {% if appointments %}
+      <div class="d-flex flex-column gap-2">
+        {% for a in appointments %}
+        <div class="appointment-card d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);font-size:0.9rem;">
+              <i class="fas fa-user-md me-1" style="color:var(--accent-green);"></i>Dr. {{ a.doctor.first_name }} {{
+              a.doctor.last_name }}
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">
+              <i class="fas fa-clock me-1"></i>{{ a.scheduled_at|date:"D, d M Y H:i" }}
+            </div>
+            {% if a.reason %}<span class="badge bg-info mt-1">{{ a.reason|truncatewords:4 }}</span>{% endif %}
+          </div>
+          {% if user|has_group:'Admin' %}
+          <a href="{% url 'hospital_admin:appointment_delete' a.pk %}" class="btn btn-outline-danger btn-sm"><i
+              class="fas fa-trash"></i></a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info"><i class="fas fa-info-circle"></i> No appointments scheduled.</div>
+      {% endif %}
     </div>
 
     <!-- Test Results Tab -->
-    <div class="tab-pane fade" id="tests" role="tabpanel">
-      <div class="card">
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Test Results</h5>
-          {% if user|has_group:'Admin' %}
-            <a href="{% url 'patient:add_test_result' patient.pk %}" class="btn btn-sm btn-success">
-              <i class="fas fa-plus"></i> Add Test Result
-            </a>
-          {% endif %}
-        </div>
-        <div class="card-body">
-          {% if test_results %}
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead class="table-light">
-                  <tr>
-                    <th>Test Name</th>
-                    <th>Type</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Result</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for test in test_results %}
-                    <tr class="animate-slideUp">
-                      <td>
-                        <strong>{{ test.test_name }}</strong>
-                      </td>
-                      <td>
-                        <span class="badge bg-info">{{ test.get_test_type_display }}</span>
-                      </td>
-                      <td>{{ test.test_date|date:"d M Y" }}</td>
-                      <td>
-                        {% if test.status == 'completed' %}
-                          <span class="badge bg-success"><i class="fas fa-check"></i> Completed</span>
-                        {% elif test.status == 'pending' %}
-                          <span class="badge bg-warning"><i class="fas fa-hourglass"></i> Pending</span>
-                        {% else %}
-                          <span class="badge bg-danger"><i class="fas fa-times"></i> Cancelled</span>
-                        {% endif %}
-                      </td>
-                      <td>
-                        {% if test.result_value %}
-                          <small>
-                            <strong>{{ test.result_value }}</strong>
-                            {% if test.normal_range %}
-                              <br><span class="text-muted">{{ test.normal_range }}</span>
-                            {% endif %}
-                          </small>
-                        {% else %}
-                          <span class="text-muted">-</span>
-                        {% endif %}
-                      </td>
-                      <td>
-                        {% if user|has_group:'Admin' %}
-                          <div class="btn-group btn-group-sm" role="group">
-                            <a href="{% url 'patient:edit_test_result' patient.pk test.id %}" class="btn btn-outline-primary" title="Edit">
-                              <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="{% url 'patient:delete_test_result' patient.pk test.id %}" class="btn btn-outline-danger" title="Delete">
-                              <i class="fas fa-trash"></i>
-                            </a>
-                          </div>
-                        {% endif %}
-                      </td>
-                    </tr>
-                    {% if test.notes %}
-                      <tr class="table-light">
-                        <td colspan="6">
-                          <small class="text-muted">
-                            <i class="fas fa-note"></i> <strong>Notes:</strong> {{ test.notes }}
-                          </small>
-                        </td>
-                      </tr>
-                    {% endif %}
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          {% else %}
-            <div class="alert alert-info" role="alert">
-              <i class="fas fa-info-circle"></i> No test results yet.
-            </div>
-          {% endif %}
-        </div>
+    <div class="tab-pane fade" id="tests">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6
+          style="font-weight:700;color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.8px;">
+          Test Results</h6>
+        {% if user|has_group:'Admin' %}
+        <a href="{% url 'patient:add_test_result' patient.pk %}" class="btn btn-success btn-sm"><i
+            class="fas fa-plus"></i> Add Test</a>
+        {% endif %}
       </div>
+      {% if test_results %}
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Test Name</th>
+              <th>Type</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Result</th>
+              {% if user|has_group:'Admin' %}<th style="text-align:right;">Actions</th>{% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for test in test_results %}
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">{{ test.test_name }}</td>
+              <td><span class="badge bg-info">{{ test.get_test_type_display }}</span></td>
+              <td>{{ test.test_date|date:"d M Y" }}</td>
+              <td>
+                {% if test.status == 'completed' %}
+                <span class="badge bg-success"><i class="fas fa-check me-1"></i>Completed</span>
+                {% elif test.status == 'pending' %}
+                <span class="badge bg-warning"><i class="fas fa-hourglass me-1"></i>Pending</span>
+                {% else %}
+                <span class="badge bg-danger"><i class="fas fa-times me-1"></i>Cancelled</span>
+                {% endif %}
+              </td>
+              <td style="font-size:0.82rem;">
+                {% if test.result_value %}
+                <strong>{{ test.result_value }}</strong>
+                {% if test.normal_range %}<br><span style="color:var(--text-muted);">{{ test.normal_range }}</span>{%
+                endif %}
+                {% else %}—{% endif %}
+              </td>
+              {% if user|has_group:'Admin' %}
+              <td style="text-align:right;">
+                <a href="{% url 'patient:edit_test_result' patient.pk test.id %}"
+                  class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i></a>
+                <a href="{% url 'patient:delete_test_result' patient.pk test.id %}"
+                  class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+              </td>
+              {% endif %}
+            </tr>
+            {% if test.notes %}
+            <tr>
+              <td colspan="{% if user|has_group:'Admin' %}6{% else %}5{% endif %}"
+                style="background:var(--bg-surface);padding:0.5rem 1rem;">
+                <small style="color:var(--text-muted);"><i class="fas fa-note-sticky me-1"></i>{{ test.notes }}</small>
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="alert alert-info"><i class="fas fa-info-circle"></i> No test results yet.</div>
+      {% endif %}
     </div>
+
   </div>
+
 </div>
-
-<style>
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .animate-fadeIn {
-    animation: fadeIn 0.3s ease-out;
-  }
-  
-  .animate-slideUp {
-    animation: slideUp 0.3s ease-out;
-  }
-  
-  .nav-tabs .nav-link {
-    color: #6c757d;
-    border: none;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
-  }
-  
-  .nav-tabs .nav-link:hover {
-    border-bottom-color: #0d6efd;
-  }
-  
-  .nav-tabs .nav-link.active {
-    color: #0d6efd;
-    border-bottom-color: #0d6efd;
-    background: none;
-  }
-</style>
 {% endblock %}
-

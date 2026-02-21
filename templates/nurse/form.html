@@ -1,127 +1,44 @@
 {% extends 'base.html' %}
+{% block title %}{{ title|default:"Nurse" }} — Smart Hospital{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-5">
+<div class="animate-fadeIn">
+
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-user-nurse"></i> {{ title|default:"Nurse" }}
+    </div>
+    <a href="{% url 'nurse:index' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i>
+      Back</a>
+  </div>
+
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-xl-6">
-      <div class="card shadow-lg animate-slide-up border-0">
-        <!-- Form Header -->
-        <div class="card-header bg-gradient-nurse border-0 py-4">
-          <h2 class="text-white mb-0">
-            <i class="fas fa-heart me-3"></i>{{ title }}
-          </h2>
-        </div>
-
-        <!-- Form Body -->
-        <div class="card-body p-4">
-          <form method="post" novalidate>
-            {% csrf_token %}
-            
-            {% if form.non_field_errors %}
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong><i class="fas fa-exclamation-circle me-2"></i>Error!</strong>
-                {% for error in form.non_field_errors %}
-                  <div>{{ error }}</div>
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endif %}
-
-            <!-- Form Fields -->
-            <div class="form-fields">
-              {% for field in form %}
-                {% if field.name != 'csrfmiddlewaretoken' %}
-                  <div class="mb-4">
-                    <label for="{{ field.id_for_label }}" class="form-label fw-600 text-nurse-primary">
-                      {{ field.label }}
-                      {% if field.field.required %}
-                        <span class="text-danger" title="Required">*</span>
-                      {% endif %}
-                    </label>
-                    
-                    {% if field.errors %}
-                      <div class="form-control is-invalid mb-2" style="display: block;">
-                        {{ field }}
-                      </div>
-                      <div class="invalid-feedback d-block">
-                        {% for error in field.errors %}
-                          <i class="fas fa-times-circle me-1"></i>{{ error }}<br>
-                        {% endfor %}
-                      </div>
-                    {% else %}
-                      {{ field }}
-                    {% endif %}
-                    
-                    {% if field.help_text %}
-                      <small class="form-text text-muted d-block mt-2">
-                        <i class="fas fa-info-circle me-1"></i>{{ field.help_text|safe }}
-                      </small>
-                    {% endif %}
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-
-            <!-- Buttons -->
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-end mt-4">
-              <a href="{% url 'nurse:index' %}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Cancel
-              </a>
-              <button type="submit" class="btn btn-primary btn-lg">
-                <i class="fas fa-save me-2"></i>Save Nurse
-              </button>
-            </div>
-          </form>
-        </div>
+    <div class="col-lg-7">
+      <div class="medical-section">
+        <form method="POST" novalidate>
+          {% csrf_token %}
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger mb-3"><i class="fas fa-exclamation-circle"></i> {{ form.non_field_errors }}
+          </div>
+          {% endif %}
+          {% for field in form %}
+          <div class="mb-4">
+            <label class="form-label" for="{{ field.id_for_label }}">
+              {{ field.label }}{% if field.field.required %} <span style="color:var(--accent-red);">*</span>{% endif %}
+            </label>
+            {{ field }}
+            {% if field.errors %}<div style="color:var(--accent-red);font-size:0.8rem;margin-top:0.3rem;">{{
+              field.errors }}</div>{% endif %}
+            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+          </div>
+          {% endfor %}
+          <div class="d-flex gap-2 pt-2">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Nurse</button>
+            <a href="{% url 'nurse:index' %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
-
-<style>
-  .bg-gradient-nurse {
-    background: linear-gradient(135deg, #00B386 0%, #009970 100%);
-  }
-
-  .text-nurse-primary {
-    color: #00B386;
-  }
-
-  .form-control, .form-select {
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-
-  .form-control:focus, .form-select:focus {
-    border-color: #00B386;
-    box-shadow: 0 0 0 0.2rem rgba(0, 179, 134, 0.15);
-  }
-
-  .form-control.is-invalid, .form-select.is-invalid {
-    border-color: #DC3545;
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
-  }
-
-  .form-label {
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .fw-600 {
-    font-weight: 600;
-  }
-
-  .btn-lg {
-    padding: 12px 32px;
-    font-weight: 600;
-  }
-
-  textarea.form-control {
-    resize: vertical;
-    min-height: 120px;
-  }
-</style>
 {% endblock %}
